@@ -1,36 +1,42 @@
 // Memory Management submodule 
 
-fn InitWorld() -> Code
+pub mod buffer_gap;
+
+#[cfg(ds = "buffer_gap")]
+use buffer_gap::*;
+
+
+fn InitWorld() -> i32
 {
 	unimplemented!();
 }
 
-fn SaveWorld(filename: &str) -> Code
+fn SaveWorld(filename: &str) -> i32
 {
 	unimplemented!();
 }
 
-fn LoadWorld(filename: &str) -> Code
+fn LoadWorld(filename: &str) -> i32
 {
 	unimplemented!();
 }
 
-fn CreateBuffer(buffer_name: &str) -> Code
+fn CreateBuffer(buffer_name: &str) -> i32 
 {
 	unimplemented!();
 }
 
-fn DeleteBuffer(buffer_name: &str) -> Code
+fn DeleteBuffer(buffer_name: &str) -> i32
 {
 	unimplemented!();
 }
 
-fn SetCurrentBuffer(buffer_name: &str) -> Code
+fn SetCurrentBuffer(buffer_name: &str) -> i32
 {
 	unimplemented!();
 }
 
-fn SetCurrentBufferNext() -> &str
+fn SetCurrentBufferNext() -> i32
 {
 	unimplemented!();
 }
