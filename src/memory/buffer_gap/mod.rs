@@ -21,8 +21,8 @@ struct Buffer
 
 struct GapBuffer
 {
+    
 
 
 
-
-
+}
