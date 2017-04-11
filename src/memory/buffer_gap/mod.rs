@@ -1,3 +1,5 @@
+use std::collections::{VecDeque};
+
 const BUFSIZE: usize = 4500; 
 
 pub struct BufferList
@@ -8,7 +10,6 @@ pub struct BufferList
 struct BufferDescriptor
 {
     name: String,
-    nextentry: Option<Box<Buffer>>,
 
     point: usize,
     modified: usize,
@@ -23,8 +24,8 @@ struct BufferDescriptor
 
 struct GapBuffer
 {
-   left: Vec<char>,
-   right: Vec<char>,
+   left: VecDeque<char>,
+   right: VecDeque<char>,
     
    gap_start: usize,
    gap_end:   usize,
@@ -44,20 +45,29 @@ impl GapBuffer
 
     pub fn new() -> Self {
         GapBuffer { 
-            left: Vec::new(),
-            right: Vec::new(),
+            left: VecDeque::new(),
+            right: VecDeque::new(),
             gap_start: 0,
             gap_end: BUFSIZE - 1
         }
     }
 
-    fn pop_left() -> Option<char> {
-        unimplemented!();   
+    fn pop_left(&mut self) -> Option<char> {
+        self.left.pop_back()   
     }
 
-    fn pop_right() -> Option<char> {
-        unimplemented!(); 
+    fn pop_right(&mut self) -> Option<char> {
+        self.right.pop_front()
     }
+    
+    fn push_left(&mut self, c: char) {
+        self.left.push_back(c);
+    }
+
+    fn push_right(&mut self, c: char) {
+        self.right.push_front(c);
+    }
+
 
     fn move_left(&mut self) -> bool {
 
