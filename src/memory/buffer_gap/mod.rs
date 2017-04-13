@@ -4,10 +4,10 @@ const BUFSIZE: usize = 4500;
 
 pub struct BufferList
 {
-    head: Vec<Box<BufferDescriptor>>,
+    head: Vec<Box<Buffer>>,
 }
 
-struct BufferDescriptor
+pub struct Buffer
 {
     name: String,
 
@@ -70,11 +70,11 @@ impl GapBuffer
 
 
     fn move_left(&mut self) -> bool {
-
+        unimplemented!();
     }
     
     fn move_right(&mut self) -> bool {
-
+        unimplemented!(); 
     }
 
 
