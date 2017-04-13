@@ -2,42 +2,42 @@
 
 mod buffer_gap;
 
-#[cfg(ds = "buffer_gap")]
-use buffer_gap::*;
+#[cfg(feature = "buffer_gap")]
+use self::buffer_gap::*;
 
 use std::result; 
 
-fn InitWorld() -> Result<i32>
+fn init_world() -> Result<i32, i32>
 {
 	unimplemented!();
 }
 
-fn SaveWorld(filename: &str) -> Result<i32>
+fn save_world(filename: &str) -> Result<i32, i32>
 {
 	unimplemented!();
 }
 
-fn LoadWorld(filename: &str) -> Result<i32>
+fn load_world(filename: &str) -> Result<i32, i32>
 {
 	unimplemented!();
 }
 
-fn CreateBuffer(buffer_name: &str) -> Result<Buffer, &'static str> 
+fn create_buffer(buffer_name: &str) -> Result<Buffer, &'static str> 
 {
 	unimplemented!();
 }
 
-fn DeleteBuffer(buffer_name: &str) -> Result<i32, &'static str>
+fn delete_buffer(buffer_name: &str) -> Result<i32, &'static str>
 {
 	unimplemented!();
 }
 
-fn SetCurrentBuffer(buffer_name: &str) -> Result<Buffer, &'static str>
+fn set_current_buffer(buffer_name: &str) -> Result<Buffer, &'static str>
 {
 	unimplemented!();
 }
 
-fn SetCurrentBufferNext() -> Result<Buffer, &'static str>
+fn set_current_buffer_next() -> Result<Buffer, &'static str>
 {
 	unimplemented!();
 }
