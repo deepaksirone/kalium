@@ -70,13 +70,41 @@ impl GapBuffer
 
 
     fn move_left(&mut self) -> bool {
-        unimplemented!();
+        if let Some(c) = self.pop_left() {
+            self.push_right(c);
+            true
+        }
+        else {
+            false
+        }
+
     }
     
     fn move_right(&mut self) -> bool {
-        unimplemented!(); 
+        if let Some(c) = self.pop_right() {
+            self.push_left(c);
+            true
+        }
+        else {
+            false
+        }
     }
-
-
+    
+    fn move_to_gap(&mut self, point: usize) -> bool
+    {
+        if point <= self.gap_start {
+                    
+    }
+    pub fn insert_char(&mut self, c: char, point: usize) -> bool
+    {
+           
+        unimplemented!();
+ 
+    }
 }
 
+#[test]
+fn tst()
+{
+    let mut g = GapBuffer::new();
+} 
