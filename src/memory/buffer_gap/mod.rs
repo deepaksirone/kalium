@@ -69,9 +69,11 @@ impl GapBuffer
     }
 
 
-    fn move_left(&mut self) -> bool {
+    fn move_gap_left(&mut self) -> bool {
         if let Some(c) = self.pop_left() {
             self.push_right(c);
+            self.gap_start -= 1;
+            self.gap_end -= 1;
             true
         }
         else {
@@ -80,9 +82,11 @@ impl GapBuffer
 
     }
     
-    fn move_right(&mut self) -> bool {
+    fn move_gap_right(&mut self) -> bool {
         if let Some(c) = self.pop_right() {
             self.push_left(c);
+            self.gap_start += 1;
+            self.gap_end += 1;
             true
         }
         else {
@@ -90,16 +94,35 @@ impl GapBuffer
         }
     }
     
-    fn move_to_gap(&mut self, point: usize) -> bool
+    fn move_gap_to_point(&mut self, point: usize)
     {
-        if point <= self.gap_start {
-                    
+        let pos = self.user_to_gap(point);
+        if pos <= self.gap_start {
+            for i in 1..(self.gap_start - pos) + 1 {
+                self.move_gap_left();
+            }
+        }
+        else {
+            for i in 1..(pos - self.gap_end) + 1 {
+                self.move_gap_right();
+            }
+        }
+
+        
+
     }
-    pub fn insert_char(&mut self, c: char, point: usize) -> bool
+    pub fn insert_char(&mut self, c: char, point: usize)
     {
-           
-        unimplemented!();
- 
+        self.move_gap_to_point(point);
+        self.push_left(c);
+        self.gap_start += 1;
+    }
+
+    pub fn delete_char(&mut self, point: usize)
+    {
+        self.move_gap_to_point(point + 1);
+        self.pop_left();
+        self.gap_start -= 1;
     }
 }
 
@@ -107,4 +130,14 @@ impl GapBuffer
 fn tst()
 {
     let mut g = GapBuffer::new();
+    g.insert_char('a', 0);
+    g.insert_char('b', 0);
+    g.insert_char('c', 0);
+    g.delete_char(0);
+
+    assert_eq!(g.pop_left(), Some('c'));
+
+
+    
+
 } 
