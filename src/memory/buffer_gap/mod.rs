@@ -124,6 +124,17 @@ impl GapBuffer
         self.pop_left();
         self.gap_start -= 1;
     }
+
+    pub fn insert_string(&mut self, s: &[char], point: usize)
+    {
+        let mut p = point; 
+        for chr in s {
+            self.insert_char(*chr, p);
+            p += 1;
+        }
+    }
+
+
 }
 
 #[test]
@@ -134,8 +145,10 @@ fn tst()
     g.insert_char('b', 0);
     g.insert_char('c', 0);
     g.delete_char(0);
-
-    assert_eq!(g.pop_left(), Some('c'));
+    g.insert_char('d', 1);
+    g.delete_char(1);
+    println!("{:?} {:?}", g.left, g.right);
+    assert_eq!(g.pop_left(), Some('b'));
 
 
     
