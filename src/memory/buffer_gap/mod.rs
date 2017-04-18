@@ -133,22 +133,33 @@ impl GapBuffer
             p += 1;
         }
     }
-
-
+    
+    pub fn delete_chars(&mut self, point: usize, n_chars: usize)
+    {
+        let mut p = point;
+        for i in 1..n_chars + 1 {
+            self.delete_char(p);
+            p -= 1;
+        }
+    }
 }
 
 #[test]
 fn tst()
 {
     let mut g = GapBuffer::new();
-    g.insert_char('a', 0);
-    g.insert_char('b', 0);
-    g.insert_char('c', 0);
-    g.delete_char(0);
-    g.insert_char('d', 1);
-    g.delete_char(1);
+    let s = ['t', 't', 't'];
+
+//    g.insert_char('a', 0);
+//    g.insert_char('b', 0);
+//    g.insert_char('c', 0);
+//    g.delete_char(0);
+//    g.insert_char('d', 1);
+//    g.delete_char(1);
+    g.insert_string(&s, 0);
+    g.delete_chars(3, 3);
     println!("{:?} {:?}", g.left, g.right);
-    assert_eq!(g.pop_left(), Some('b'));
+//    assert_eq!(g.pop_left(), Some('t'));
 
 
     
