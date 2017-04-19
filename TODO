@@ -2,3 +2,4 @@ TODO List
 ~~~--~~~--~~
 1) Decide memory management algorithm
 2) Correct Commit info
+3) Polish buffer_gap implementation
