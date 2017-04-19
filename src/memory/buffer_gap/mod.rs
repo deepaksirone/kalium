@@ -125,11 +125,11 @@ impl GapBuffer
         self.gap_start -= 1;
     }
 
-    pub fn insert_string(&mut self, s: &[char], point: usize)
+    pub fn insert_string(&mut self, s: &str, point: usize)
     {
         let mut p = point; 
-        for chr in s {
-            self.insert_char(*chr, p);
+        for chr in s.chars() {
+            self.insert_char(chr, p);
             p += 1;
         }
     }
@@ -148,7 +148,7 @@ impl GapBuffer
 fn tst()
 {
     let mut g = GapBuffer::new();
-    let s = ['t', 't', 't'];
+    let s = "ttt";
 
 //    g.insert_char('a', 0);
 //    g.insert_char('b', 0);
