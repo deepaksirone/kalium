@@ -53,27 +53,33 @@ impl GapBuffer
     }
 
     fn pop_left(&mut self) -> Option<char> {
-        self.left.pop_back()   
+        self.left.pop_back().map(|chr| { 
+            self.gap_start -= 1;
+            chr 
+        })
     }
 
     fn pop_right(&mut self) -> Option<char> {
-        self.right.pop_front()
+        self.right.pop_front().map(|chr| {
+            self.gap_end += 1;
+            chr
+        })
     }
     
     fn push_left(&mut self, c: char) {
         self.left.push_back(c);
+        self.gap_start += 1;
     }
 
     fn push_right(&mut self, c: char) {
         self.right.push_front(c);
+        self.gap_end -= 1;
     }
 
 
     fn move_gap_left(&mut self) -> bool {
         if let Some(c) = self.pop_left() {
             self.push_right(c);
-            self.gap_start -= 1;
-            self.gap_end -= 1;
             true
         }
         else {
@@ -85,8 +91,6 @@ impl GapBuffer
     fn move_gap_right(&mut self) -> bool {
         if let Some(c) = self.pop_right() {
             self.push_left(c);
-            self.gap_start += 1;
-            self.gap_end += 1;
             true
         }
         else {
@@ -115,14 +119,12 @@ impl GapBuffer
     {
         self.move_gap_to_point(point);
         self.push_left(c);
-        self.gap_start += 1;
     }
 
     pub fn delete_char(&mut self, point: usize)
     {
         self.move_gap_to_point(point + 1);
         self.pop_left();
-        self.gap_start -= 1;
     }
 
     pub fn insert_string(&mut self, s: &str, point: usize)
