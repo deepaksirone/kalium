@@ -1,4 +1,4 @@
-use std::collections::{VecDeque};
+use std::collections::vec_deque::*;
 
 const BUFSIZE: usize = 4500; 
 
@@ -21,6 +21,11 @@ pub struct Buffer
     data: Option<Box<GapBuffer>>
 }
 
+struct GapBufferIter<'a>
+{
+    left_iter: Iter<'a, char>,
+    right_iter: Iter<'a, char> 
+}
 
 struct GapBuffer
 {
@@ -144,14 +149,32 @@ impl GapBuffer
             p -= 1;
         }
     }
+
+    pub fn iter(&self) -> GapBufferIter
+    {
+        GapBufferIter { 
+            left_iter: self.left.iter(),
+            right_iter: self.right.iter()
+        }
+    }
 }
 
+impl<'a> Iterator for GapBufferIter<'a>
+{
+    type Item = char;
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.left_iter.next() {
+            Some(c) => Some(*c),
+            None => self.right_iter.next().map(|chr_ref| *chr_ref)
+        }
+    }
+
+}
 #[test]
 fn tst()
 {
     let mut g = GapBuffer::new();
-    let s = "ttt";
-
+    let s = "tab"; 
 //    g.insert_char('a', 0);
 //    g.insert_char('b', 0);
 //    g.insert_char('c', 0);
@@ -159,7 +182,11 @@ fn tst()
 //    g.insert_char('d', 1);
 //    g.delete_char(1);
     g.insert_string(&s, 0);
-    g.delete_chars(3, 3);
+    
+    let mut itr = g.iter();
+    assert_eq!(itr.next(), Some('t'));
+    assert_eq!(itr.next(), Some('a'));
+    assert_eq!(itr.next(), Some('b'));
     println!("{:?} {:?}", g.left, g.right);
 //    assert_eq!(g.pop_left(), Some('t'));
 
