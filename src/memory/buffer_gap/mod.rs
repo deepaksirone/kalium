@@ -15,7 +15,7 @@ pub struct Buffer
     length: usize,
 
     filename: String,
-    modename: String,
+    modename: Option<String>,
 
     data: Option<Box<GapBuffer>>
 }
@@ -171,6 +171,91 @@ impl<'a> Iterator for GapBufferIter<'a>
     }
 
 }
+
+impl Buffer 
+{
+    pub fn new(name: &str, fname: &str) -> Buffer
+    {
+        unimplemented!();
+    }
+
+    fn set_filename(&mut self, fname: &str) 
+    {
+        unimplemented!();
+    }
+
+    fn get_filename(&self) -> String
+    {
+        unimplemented!();
+    }
+
+    fn write_buffer(&self) -> bool 
+    {
+        unimplemented!();
+    }
+
+    fn read_buffer(&mut self) -> bool
+    {
+        unimplemented!();
+    }
+
+    fn set_modified(&mut self) 
+    {
+        unimplemented!();
+    }
+
+    fn get_modified(&self) -> usize 
+    {
+        unimplemented!();
+    }
+
+    fn set_point_abs(&mut self, point: usize)
+    {
+        unimplemented!();
+    }
+
+    fn set_point_rel(&mut self, offset: i32)
+    {
+        unimplemented!();
+    }
+
+    fn get_point(&mut self) -> usize
+    {
+        unimplemented!();
+    }
+
+    fn get_length(&self) -> usize 
+    {
+        unimplemented!();
+    }
+
+    fn insert_string(&mut self, pos: usize, s: &str)
+    {
+        unimplemented!();
+    }
+
+    fn delete_chars(&mut self, pos: usize, count: usize)
+    {
+        unimplemented!();
+    }
+
+    fn get_string_abs(&self, pos: usize, length: usize) -> String
+    {
+        unimplemented!();
+    }
+
+    fn get_string_rel(&self, length: usize) -> String
+    {
+        unimplemented!();
+    }
+
+
+
+
+}
+
+
+
 #[test]
 fn tst()
 {
