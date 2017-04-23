@@ -1,5 +1,5 @@
 use std::collections::vec_deque::*;
-
+use std::fs::*;
 
 pub struct BufferList
 {
@@ -176,7 +176,18 @@ impl Buffer
 {
     pub fn new(name: &str, fname: &str) -> Buffer
     {
-        unimplemented!();
+        let filesize = metadata(name).ok().unwrap().len() as usize; 
+        Buffer { 
+            name: name.to_owned(),
+            point: 0,
+            modified: 0,
+            length: filesize,
+            filename: fname.to_owned(),
+            modename: None,
+            data: Some(Box::new(GapBuffer::new(filesize)))
+    
+        }
+            
     }
 
     fn set_filename(&mut self, fname: &str) 
