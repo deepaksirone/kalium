@@ -1,11 +1,11 @@
 # kalium
-A small text editor written in Rust
+A small, hackable text editor written in Rust
 
 ## Aims
 
 ### Efficiency
 
 ### Highly Customizable
-* Memory management algorithms
+* Switchable memory management algorithms
 * Kalium scripts
 * Detailed hacking guide 
