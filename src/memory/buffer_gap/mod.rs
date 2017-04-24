@@ -14,7 +14,7 @@ pub struct Buffer
     modified: usize,
     length: usize,
 
-    filename: String,
+    filename: Option<String>,
     modename: Option<String>,
 
     data: Option<Box<GapBuffer>>
@@ -182,7 +182,7 @@ impl Buffer
             point: 0,
             modified: 0,
             length: filesize,
-            filename: fname.to_owned(),
+            filename: Some(fname.to_owned()),
             modename: None,
             data: Some(Box::new(GapBuffer::new(filesize)))
     
@@ -192,7 +192,7 @@ impl Buffer
 
     fn set_filename(&mut self, fname: &str) 
     {
-        unimplemented!();
+        self.filename = Some(fname.to_owned());   
     }
 
     fn get_filename(&self) -> String
