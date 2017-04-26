@@ -1,5 +1,5 @@
 use std::collections::vec_deque::*;
-use std::fs::*;
+use std::fs::metadata;
 
 pub struct BufferList
 {
@@ -195,9 +195,9 @@ impl Buffer
         self.filename = Some(fname.to_owned());   
     }
 
-    fn get_filename(&self) -> String
+    fn get_filename(&self) -> Option<String>
     {
-        unimplemented!();
+        self.filename.as_ref().map(|fname| fname.clone())
     }
 
     fn write_buffer(&self) -> bool 
@@ -212,42 +212,74 @@ impl Buffer
 
     fn set_modified(&mut self) 
     {
-        unimplemented!();
+        self.modified = 1;
     }
 
     fn get_modified(&self) -> usize 
     {
-        unimplemented!();
+        self.modified
     }
 
-    fn set_point_abs(&mut self, point: usize)
+    fn set_point_abs(&mut self, point: usize) -> bool 
     {
-        unimplemented!();
+        if point >= self.length {
+            false
+        }
+        else {
+            self.point = point; 
+            true
+        }
     }
 
-    fn set_point_rel(&mut self, offset: i32)
+    fn set_point_rel(&mut self, offset: i64) -> bool
     {
-        unimplemented!();
+        let p = self.point as i64; 
+        if p + offset < 0 || p + offset >= self.length as i64 { 
+            false 
+        }
+        else {
+            self.point = (p + offset) as usize;
+            true
+        }
     }
 
     fn get_point(&mut self) -> usize
     {
-        unimplemented!();
+        self.point
     }
 
     fn get_length(&self) -> usize 
     {
-        unimplemented!();
+        self.length
     }
 
-    fn insert_string(&mut self, pos: usize, s: &str)
+    fn insert_string(&mut self, s: &str, pos: usize)
     {
-        unimplemented!();
+/*       self.data = self.data.take().map(|boxed_buf| {
+                let mut buf = *boxed_buf; 
+                buf.insert_string(s, pos);
+                Box::new(buf)
+        });
+*/
+        self.data.as_mut().map(|boxed_buf_ref| {
+                 boxed_buf_ref.insert_string(s, pos);
+                 boxed_buf_ref
+        }); 
     }
 
     fn delete_chars(&mut self, pos: usize, count: usize)
     {
-        unimplemented!();
+/*        self.data = self.data.take().map(|boxed_buf| {
+                let mut buf = *boxed_buf;
+                buf.delete_chars(pos, count);
+                Box::new(buf)
+        });
+*/
+        self.data.as_mut().map(|boxed_buf_ref| {
+                 boxed_buf_ref.delete_chars(pos, count);
+                 boxed_buf_ref
+        });
+        
     }
 
     fn get_string_abs(&self, pos: usize, length: usize) -> String
