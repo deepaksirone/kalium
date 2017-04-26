@@ -263,7 +263,6 @@ impl Buffer
 */
         self.data.as_mut().map(|boxed_buf_ref| {
                  boxed_buf_ref.insert_string(s, pos);
-                 boxed_buf_ref
         }); 
     }
 
@@ -277,7 +276,6 @@ impl Buffer
 */
         self.data.as_mut().map(|boxed_buf_ref| {
                  boxed_buf_ref.delete_chars(pos, count);
-                 boxed_buf_ref
         });
         
     }
