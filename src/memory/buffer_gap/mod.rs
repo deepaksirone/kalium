@@ -1,5 +1,6 @@
 use std::collections::vec_deque::*;
 use std::fs::metadata;
+use std::ops::Index;
 
 pub struct BufferList
 {
@@ -169,6 +170,11 @@ impl<'a> Iterator for GapBufferIter<'a>
             None => self.right_iter.next().map(|chr_ref| *chr_ref)
         }
     }
+
+}
+
+impl Index<usize> for GapBuffer {
+
 
 }
 
