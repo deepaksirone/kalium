@@ -1,6 +1,6 @@
 use std::collections::vec_deque::*;
 use std::fs::metadata;
-use std::ops::Index;
+use std::ops::{Index, IndexMut};
 
 pub struct BufferList
 {
@@ -174,10 +174,44 @@ impl<'a> Iterator for GapBufferIter<'a>
 }
 
 impl Index<usize> for GapBuffer {
+    type Output = char;
+    fn index(&self, idx: usize) -> &Self::Output {
+        let right_len = self.right.len();
+        let left_len = self.left.len();
+        
+        if idx < left_len {
+            &self.left[idx]
+        }
+        else if idx >= left_len && idx < right_len {
+            &self.right[idx - left_len]
+        }
+        else {
+            panic!("Index out of bounds")
+        }
+    }
 
 
 }
 
+impl IndexMut<usize> for GapBuffer {
+
+    fn index_mut(&mut self, idx: usize) -> &mut Self::Output {
+        let right_len = self.right.len();
+        let left_len = self.left.len();
+
+        if idx < left_len {
+           &mut self.left[idx]
+        }
+        else if idx >= left_len && idx < right_len {
+           &mut self.right[idx - left_len]
+        }
+    
+        else {   
+               panic!("Index out of bounds")
+        }        
+    }
+
+}
 impl Buffer 
 {
     pub fn new(name: &str, fname: &str) -> Buffer
@@ -321,14 +355,17 @@ fn tst()
 
     println!("{:?} {:?}", g.left, g.right);
     let mut itr = g.iter();
-    assert_eq!(itr.next(), Some('c'));
+/*    assert_eq!(itr.next(), Some('c'));
     assert_eq!(itr.next(), Some('a'));
     assert_eq!(itr.next(), Some('b'));
     assert_eq!(itr.next(), Some('t'));
     assert_eq!(itr.next(), Some('a'));
     assert_eq!(itr.next(), Some('b'));
     assert_eq!(itr.next(), None);
-    
+*/ 
+    assert_eq!(g[0], 'c');
+    assert_eq!(g[2], 'b');
+
 //    assert_eq!(g.pop_left(), Some('t'));
 
 
