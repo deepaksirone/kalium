@@ -134,7 +134,13 @@ impl GapBuffer
 
     pub fn insert_string(&mut self, s: &str, point: usize)
     {
-        let mut p = point; 
+        let mut p = point;
+        let gap_sz = self.get_gap_size();
+        
+        if s.len() > gap_sz {
+            self.increase_buffer_size(s.len() - gap_sz);
+        }
+
         for chr in s.chars() {
             self.insert_char(chr, p);
             p += 1;
@@ -158,6 +164,21 @@ impl GapBuffer
         }
     }
 
+    fn increase_buffer_size(&mut self, num_chars: usize)
+    {
+        self.gap_end += num_chars; 
+    }
+
+    fn get_gap_size(&self) -> usize
+    {
+//        println!("{} {}", self.gap_start, self.gap_end);
+        if self.gap_start == 0 {
+            self.gap_end + 1
+        }
+        else {
+            self.gap_end - (self.gap_start - 1)
+        }
+    }
 
 }
 
@@ -330,7 +351,13 @@ impl Buffer
         unimplemented!();
     }
 
-
+    fn increase_buffer_size(&mut self, num_chars: usize)
+    {
+        self.length += num_chars;
+        self.data.as_mut().map(|boxed_buf_ref| {
+                boxed_buf_ref.increase_buffer_size(num_chars);
+        });
+    }
 
 
 }
@@ -340,7 +367,7 @@ impl Buffer
 #[test]
 fn tst()
 {
-    let mut g = GapBuffer::new(1000);
+    let mut g = GapBuffer::new(1);
     let s: &str = "tab";
     let t = "cab";
 
@@ -355,16 +382,16 @@ fn tst()
 
     println!("{:?} {:?}", g.left, g.right);
     let mut itr = g.iter();
-/*    assert_eq!(itr.next(), Some('c'));
+    assert_eq!(itr.next(), Some('c'));
     assert_eq!(itr.next(), Some('a'));
     assert_eq!(itr.next(), Some('b'));
     assert_eq!(itr.next(), Some('t'));
     assert_eq!(itr.next(), Some('a'));
     assert_eq!(itr.next(), Some('b'));
     assert_eq!(itr.next(), None);
-*/ 
-    assert_eq!(g[0], 'c');
-    assert_eq!(g[2], 'b');
+ 
+//    assert_eq!(g[0], 'c');
+//    assert_eq!(g[2], 'b');
 
 //    assert_eq!(g.pop_left(), Some('t'));
 
