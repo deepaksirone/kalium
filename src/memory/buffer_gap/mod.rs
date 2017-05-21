@@ -1,5 +1,4 @@
 use std::collections::vec_deque::*;
-use std::fs::metadata;
 use std::ops::{Index, IndexMut};
 
 pub struct BufferList
@@ -13,7 +12,7 @@ pub struct Buffer
 
     point: usize,
     modified: usize,
-    length: usize,
+//  length: usize,
 
     filename: Option<String>,
     modename: Option<String>,
@@ -31,7 +30,8 @@ struct GapBuffer
 {
    left: VecDeque<char>,
    right: VecDeque<char>,
-    
+   length: usize,
+
    gap_start: usize,
    gap_end:   usize,
 
@@ -52,9 +52,16 @@ impl GapBuffer
         GapBuffer { 
             left: VecDeque::new(),
             right: VecDeque::new(),
+            length: size,
             gap_start: 0,
             gap_end: size - 1
         }
+    }
+
+    pub fn new_from_str(s: &str) -> Self {
+        let mut g = GapBuffer::new(1);
+        g.insert_string(s, 0);
+        g
     }
 
     fn pop_left(&mut self) -> Option<char> {
@@ -166,7 +173,8 @@ impl GapBuffer
 
     fn increase_buffer_size(&mut self, num_chars: usize)
     {
-        self.gap_end += num_chars; 
+        self.gap_end += num_chars;
+        self.length += num_chars;
     }
 
     fn get_gap_size(&self) -> usize
@@ -235,21 +243,33 @@ impl IndexMut<usize> for GapBuffer {
 }
 impl Buffer 
 {
-    pub fn new(name: &str, fname: &str) -> Buffer
+    pub fn new_from_str(name: &str,fname: &str, s: &str) -> Buffer
     {
-        let filesize = metadata(name).ok().unwrap().len() as usize; 
         Buffer { 
             name: name.to_owned(),
             point: 0,
             modified: 0,
-            length: filesize,
+//            length: filesize,
             filename: Some(fname.to_owned()),
             modename: None,
-            data: Some(Box::new(GapBuffer::new(filesize)))
+            data: Some(Box::new(GapBuffer::new_from_str(s)))
     
         }
             
     }
+    
+    pub fn new_empty_buffer(name: &str) -> Buffer
+    {
+        Buffer {
+            name: name.to_owned(),
+            point: 0,
+            modified: 0,
+            filename: None,
+            modename: None,
+            data: Some(Box::new(GapBuffer::new(1)))
+        }
+    }
+
 
     fn set_filename(&mut self, fname: &str) 
     {
@@ -268,7 +288,7 @@ impl Buffer
 
     fn read_buffer(&mut self) -> bool
     {
-        unimplemented!();
+        unimplemented!()        
     }
 
     fn set_modified(&mut self) 
@@ -283,7 +303,7 @@ impl Buffer
 
     fn set_point_abs(&mut self, point: usize) -> bool 
     {
-        if point >= self.length {
+        if point >= self.data.as_mut().map(|boxed_buf_ref| boxed_buf_ref.length).unwrap() {
             false
         }
         else {
@@ -295,7 +315,7 @@ impl Buffer
     fn set_point_rel(&mut self, offset: i64) -> bool
     {
         let p = self.point as i64; 
-        if p + offset < 0 || p + offset >= self.length as i64 { 
+        if p + offset < 0 || p + offset >= self.data.as_mut().map(|boxed_buf_ref| boxed_buf_ref.length).unwrap() as i64 { 
             false 
         }
         else {
@@ -311,7 +331,7 @@ impl Buffer
 
     fn get_length(&self) -> usize 
     {
-        self.length
+        self.data.as_ref().map(|boxed_buf_ref| boxed_buf_ref.length).unwrap()
     }
 
     fn insert_string(&mut self, s: &str, pos: usize)
@@ -353,7 +373,6 @@ impl Buffer
 
     fn increase_buffer_size(&mut self, num_chars: usize)
     {
-        self.length += num_chars;
         self.data.as_mut().map(|boxed_buf_ref| {
                 boxed_buf_ref.increase_buffer_size(num_chars);
         });
