@@ -1,3 +1,4 @@
+#![feature(struct_field_attributes)]
 extern crate rustbox;
 
 use std::error::Error;
