@@ -4,6 +4,7 @@ version = "0.1.0"
 authors = ["Deepak Sirone"]
 
 [dependencies]
+rustbox = "*"
 
 [features]
 buffer_gap = []
