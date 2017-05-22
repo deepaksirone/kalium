@@ -1,6 +1,6 @@
 
 #[cfg(feature = "buffer_gap")] 
-use memory::buffer_gap::GapBuffer;
+use memory::buffer_gap::{GapBuffer, GapBufferIter};
 
 pub struct BufferList
 {

@@ -1,9 +1,11 @@
 // Memory Management submodule 
 
+//mod buffer_gap;
 mod buffer_gap;
+pub mod buffer;
 
 #[cfg(feature = "buffer_gap")]
-use self::buffer_gap::*;
+use memory::buffer::Buffer;
 
 use std::result; 
 
