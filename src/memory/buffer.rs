@@ -2,6 +2,8 @@
 #[cfg(feature = "buffer_gap")] 
 use memory::buffer_gap::{GapBuffer, GapBufferIter};
 
+use std::path::PathBuf;
+
 pub struct BufferList
 {
     head: Vec<Box<Buffer>>,
@@ -15,7 +17,7 @@ pub struct Buffer
     modified: usize,
 //  length: usize,
 
-    filename: Option<String>,
+    filename: Option<PathBuf>,
     modename: Option<String>,
 
     #[cfg(feature = "buffer_gap")]
@@ -31,7 +33,7 @@ impl Buffer
             point: 0,
             modified: 0,
 //            length: filesize,
-            filename: Some(fname.to_owned()),
+            filename: Some(PathBuf::from(fname)),
             modename: None,
 
             #[cfg(feature = "buffer_gap")]
@@ -56,10 +58,10 @@ impl Buffer
 
     fn set_filename(&mut self, fname: &str) 
     {
-        self.filename = Some(fname.to_owned());   
+        self.filename = Some(PathBuf::from(fname));   
     }
 
-    fn get_filename(&self) -> Option<String>
+    fn get_filename(&self) -> Option<PathBuf>
     {
         self.filename.as_ref().map(|fname| fname.clone())
     }
