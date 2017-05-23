@@ -22,6 +22,23 @@ pub struct Buffer
     data: Option<Box<GapBuffer>>
 }
 
+pub struct BufferIter<'a>
+{
+    #[cfg(feature = "buffer_gap")]
+    iter: GapBufferIter<'a>
+}
+
+impl<'a> Iterator for BufferIter<'a>
+{
+    type Item = char;
+    fn next(&mut self) -> Option<Self::Item>
+    {
+        self.iter.next()
+    }
+
+}
+
+
 impl Buffer 
 {
     pub fn new_from_str(name: &str,fname: &str, s: &str) -> Buffer
