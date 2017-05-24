@@ -3,6 +3,11 @@
 use memory::buffer_gap::{GapBuffer, GapBufferIter};
 
 use std::path::PathBuf;
+use std::io::prelude::*;
+use std::fs::{File, OpenOptions};
+use std::io::*;
+
+
 
 pub struct BufferList
 {
@@ -73,37 +78,43 @@ impl Buffer
     }
 
 
-    fn set_filename(&mut self, fname: &str) 
+    pub fn set_filename(&mut self, fname: &str) 
     {
         self.filename = Some(PathBuf::from(fname));   
     }
 
-    fn get_filename(&self) -> Option<PathBuf>
+    pub fn get_filename(&self) -> Option<PathBuf>
     {
         self.filename.as_ref().map(|fname| fname.clone())
     }
 
-    fn write_buffer(&self) -> bool 
+    pub fn write_buffer(&self) -> bool 
     {
-        unimplemented!();
+        let ops = OpenOptions::new().create(true).write(true).open(self.filename.as_ref().map(|fname| fname.clone()).unwrap());
+        let mut f = BufWriter::new(ops.ok().unwrap());
+        let mut b = [0; 4];
+        for chr in self.data.as_ref().map(|buf| buf.iter()).unwrap() {
+            f.write(chr.encode_utf8(&mut b).as_bytes()).unwrap();
+        }
+        true
     }
 
-    fn read_buffer(&mut self) -> bool
+    pub fn read_buffer(&mut self) -> bool
     {
         unimplemented!()        
     }
 
-    fn set_modified(&mut self) 
+    pub fn set_modified(&mut self) 
     {
         self.modified = 1;
     }
 
-    fn get_modified(&self) -> usize 
+    pub fn get_modified(&self) -> usize 
     {
         self.modified
     }
 
-    fn set_point_abs(&mut self, point: usize) -> bool 
+    pub fn set_point_abs(&mut self, point: usize) -> bool 
     {
         if point >= self.data.as_mut().map(|boxed_buf_ref| boxed_buf_ref.length).unwrap() {
             false
@@ -114,7 +125,7 @@ impl Buffer
         }
     }
 
-    fn set_point_rel(&mut self, offset: i64) -> bool
+    pub fn set_point_rel(&mut self, offset: i64) -> bool
     {
         let p = self.point as i64; 
         if p + offset < 0 || p + offset >= self.data.as_mut().map(|boxed_buf_ref| boxed_buf_ref.length).unwrap() as i64 { 
@@ -126,17 +137,17 @@ impl Buffer
         }
     }
 
-    fn get_point(&mut self) -> usize
+    pub fn get_point(&mut self) -> usize
     {
         self.point
     }
 
-    fn get_length(&self) -> usize 
+    pub fn get_length(&self) -> usize 
     {
         self.data.as_ref().map(|boxed_buf_ref| boxed_buf_ref.length).unwrap()
     }
 
-    fn insert_string(&mut self, s: &str, pos: usize)
+    pub fn insert_string(&mut self, s: &str, pos: usize)
     {
 /*       self.data = self.data.take().map(|boxed_buf| {
                 let mut buf = *boxed_buf; 
@@ -149,7 +160,7 @@ impl Buffer
         }); 
     }
 
-    fn delete_chars(&mut self, pos: usize, count: usize)
+    pub fn delete_chars(&mut self, pos: usize, count: usize)
     {
 /*        self.data = self.data.take().map(|boxed_buf| {
                 let mut buf = *boxed_buf;
@@ -163,12 +174,12 @@ impl Buffer
         
     }
 
-    fn get_string_abs(&self, pos: usize, length: usize) -> String
+    pub fn get_string_abs(&self, pos: usize, length: usize) -> String
     {
         unimplemented!();
     }
 
-    fn get_string_rel(&self, length: usize) -> String
+    pub fn get_string_rel(&self, length: usize) -> String
     {
         unimplemented!();
     }
