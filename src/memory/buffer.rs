@@ -73,6 +73,8 @@ impl Buffer
             modified: 0,
             filename: None,
             modename: None,
+
+            #[cfg(feature = "buffer_gap")]
             data: Some(Box::new(GapBuffer::new(1)))
         }
     }
@@ -101,7 +103,14 @@ impl Buffer
 
     pub fn read_buffer(&mut self) -> bool
     {
-        unimplemented!()        
+        let ops = OpenOptions::new().read(true).open(self.filename.as_ref().map(|fname| fname.clone()).unwrap());
+        let mut f = BufReader::new(ops.ok().unwrap());
+        let mut s = String::new();
+        f.read_to_string(&mut s);
+
+        self.data.as_mut().map(|buf| buf.read_from_str(&s));
+        true
+
     }
 
     pub fn set_modified(&mut self) 

@@ -44,6 +44,19 @@ impl GapBuffer
         g.insert_string(s, 0);
         g
     }
+    
+    pub fn read_from_str(&mut self, s: &str) {
+        self.clear();
+        self.insert_string(s, 0);
+    }
+
+    fn clear(&mut self) {
+        self.left.clear();
+        self.right.clear();
+        self.length = 1;
+        self.gap_start = 0;
+        self.gap_end = 0;
+    }
 
     fn pop_left(&mut self) -> Option<char> {
         self.left.pop_back().map(|chr| { 
