@@ -183,6 +183,7 @@ impl Buffer
         
     }
 
+/*
     pub fn get_string_abs(&self, pos: usize, length: usize) -> String
     {
         unimplemented!();
@@ -192,7 +193,7 @@ impl Buffer
     {
         unimplemented!();
     }
-
+*/
 /*    fn increase_buffer_size(&mut self, num_chars: usize)
     {
         self.data.as_mut().map(|boxed_buf_ref| {

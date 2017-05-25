@@ -11,6 +11,7 @@ use rustbox::Key;
 use memory::buffer::Buffer;
 
 pub mod memory;
+pub mod editor;
 
 fn main()
 {
