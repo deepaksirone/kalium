@@ -125,7 +125,7 @@ impl Buffer
 
     pub fn set_point_abs(&mut self, point: usize) -> bool 
     {
-        if point >= self.data.as_mut().map(|boxed_buf_ref| boxed_buf_ref.length).unwrap() {
+        if point >= self.get_length() {
             false
         }
         else {
@@ -137,7 +137,7 @@ impl Buffer
     pub fn set_point_rel(&mut self, offset: i64) -> bool
     {
         let p = self.point as i64; 
-        if p + offset < 0 || p + offset >= self.data.as_mut().map(|boxed_buf_ref| boxed_buf_ref.length).unwrap() as i64 { 
+        if p + offset < 0 || p + offset >= self.get_length() as i64 { 
             false 
         }
         else {
@@ -153,7 +153,7 @@ impl Buffer
 
     pub fn get_length(&self) -> usize 
     {
-        self.data.as_ref().map(|boxed_buf_ref| boxed_buf_ref.length).unwrap()
+        self.data.as_ref().map(|boxed_buf_ref| boxed_buf_ref.get_length()).unwrap()
     }
 
     pub fn insert_string(&mut self, s: &str, pos: usize)
@@ -204,4 +204,16 @@ impl Buffer
 
 }
 
+pub trait BufferTrait {
 
+    fn new(size: usize) -> Self;
+
+    fn new_from_str(s: &str) -> Self;
+
+    fn insert_string(&mut self, s: &str, pos: usize); 
+
+    fn delete_chars(&mut self, pos: usize, count: usize);
+
+    fn get_length(&self) -> usize; 
+
+}

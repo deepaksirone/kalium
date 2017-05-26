@@ -182,6 +182,11 @@ impl GapBuffer
         }
     }
 
+    pub fn get_length(&self) -> usize 
+    {
+        self.length
+    }
+
 }
 
 impl<'a> Iterator for GapBufferIter<'a>
