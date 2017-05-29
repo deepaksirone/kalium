@@ -40,9 +40,10 @@ fn main()
     }
 */
 
-    let mut buf = Buffer::new_empty_buffer("Buf1");
+/*    let mut buf = Buffer::new_empty_buffer("Buf1");
     buf.set_filename("new.txt");
     buf.insert_string("This is me!!!", 0);
     buf.write_buffer(); 
-
+*/
+    editor::Editor::init();
 }
