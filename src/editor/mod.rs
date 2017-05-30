@@ -17,16 +17,26 @@ impl Editor
     pub fn init()
     {
         println!("Starting Kalium...");
-        for argument in env::args() {
-            println!("Attempting to open: {}", argument);
-            match File::open(argument) {
-                Ok(val) => { },
-                Err(e) => println!("{}", e)
-            }
+        for (i, argument) in env::args().enumerate() {
+            if i > 0 { 
+                println!("Attempting to open: {}", argument);
+                match File::open(argument) {
+                    Ok(val) => {},
+                    Err(e) => println!("{}", e)
+                }
+            } 
         }
     }
     
-    
+    fn new() -> Self
+    {
+        Editor {
+            buf_list: BufferList::new(),
+            title: None,
+            cur_buf_idx: 0
+        }
+
+    }
 
 }
 

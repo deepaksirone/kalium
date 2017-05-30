@@ -217,3 +217,14 @@ pub trait BufferTrait {
     fn get_length(&self) -> usize; 
 
 }
+
+impl BufferList {
+
+    pub fn new() -> Self {
+        BufferList {
+            head: Vec::new()
+        }
+    }
+
+}
+
