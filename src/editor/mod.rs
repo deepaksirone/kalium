@@ -17,14 +17,16 @@ impl Editor
     pub fn init()
     {
         println!("Starting Kalium...");
-        for (i, argument) in env::args().enumerate() {
+        let mut editor = Editor::new();
+
+        for (i, argument) in env::args().skip(1).enumerate() {
             if i > 0 { 
                 println!("Attempting to open: {}", argument);
                 match File::open(argument) {
-                    Ok(val) => {},
+                    Ok(val) => { },
                     Err(e) => println!("{}", e)
                 }
-            } 
+            }
         }
     }
     
@@ -36,6 +38,11 @@ impl Editor
             cur_buf_idx: 0
         }
 
+    }
+
+    fn open(&mut self, s: &str)
+    {
+        unimplemented!()
     }
 
 }
