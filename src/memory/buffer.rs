@@ -11,7 +11,7 @@ use std::io::*;
 
 pub struct BufferList
 {
-    head: Vec<Box<Buffer>>,
+    head: Vec<Buffer>
 }
 
 pub struct Buffer
@@ -201,6 +201,15 @@ impl Buffer
         });
     }
 */
+    pub fn to_string(&self) -> String
+    {
+        let mut s = String::new();
+        for chr in self.data.as_ref().map(|buf| buf.iter()).unwrap() {
+            s.push(chr);
+        }
+        s
+    }
+        
 
 }
 
@@ -225,6 +234,11 @@ impl BufferList {
             head: Vec::new()
         }
     }
+    
+    pub fn add(&mut self, buf: Buffer) {
+        self.head.push(buf);
+    }
+
 
 }
 
