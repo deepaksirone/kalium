@@ -239,6 +239,15 @@ impl BufferList {
         self.head.push(buf);
     }
 
+    pub fn get_buf(&self, idx: usize) -> Option<&Buffer> {
+        if idx >= self.head.len() {
+            None
+        }
+        else {
+            Some(&self.head[idx])
+        }
+    }
+                 
 
 }
 

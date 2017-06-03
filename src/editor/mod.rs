@@ -2,15 +2,21 @@
 
 use memory::buffer::{BufferList, Buffer, BufferIter};
 use std::env;
-use std::fs::File;
+use std::error::Error;
+use std::default::Default;
+use std::fs::*;
 use std::io::prelude::*;
+
+use rustbox::{Color, RustBox};
+use rustbox::*; 
 
 pub struct Editor {
     buf_list: BufferList,
     title: Option<String>,
-    cur_buf_idx: usize
-
+    cur_buf_idx: usize,
+    rustbox: RustBox
 }
+
 enum FileStatus {
     Ok,
     NotFound,
@@ -27,28 +33,34 @@ impl Editor
         let count = env::args().skip(1).count();
 
         for argument in env::args().skip(1) {
-            editor.open(argument.as_str());
+            match editor.open(argument.as_str()) {
+                FileStatus::Ok => { },
+                FileStatus::NotFound => { println!("File {} not found", argument); },
+                FileStatus::Other =>  { } 
+            }
         }
         
-        println!("Count = {}", count);
+//        println!("Count = {}", count);
 
         if count == 0 {
             editor.add(Buffer::new_empty_buffer("emp"))
         }
         editor.set_cur_buf(0);
-    
+        editor.redraw();  
         
     }
 
 
     
+
     
     fn new() -> Self
     {
         Editor {
             buf_list: BufferList::new(),
             title: None,
-            cur_buf_idx: 0
+            cur_buf_idx: 0,
+            rustbox: RustBox::init(Default::default()).ok().unwrap()
         }
 
     }
@@ -76,6 +88,32 @@ impl Editor
     fn add(&mut self, buf: Buffer)
     {
         self.buf_list.add(buf);
+    }
+
+    fn current_buffer(&self) -> Option<&Buffer>
+    {
+        self.buf_list.get_buf(self.cur_buf_idx)
+    }
+
+    fn redraw(&mut self)
+    {
+        for (index, part) in self.current_buffer().unwrap().to_string().lines().enumerate() {
+                self.rustbox.print(1, index + 1, RB_NORMAL, Color::White, Color::Black, part);
+        }
+        self.rustbox.present();
+
+        loop {
+             match self.rustbox.poll_event(false) {
+                 Ok(Event::KeyEvent(key)) => {
+                         match key {
+                              Key::Char('q') => { break; }
+                              _ => { }
+                        }
+                },
+                Err(e) => panic!("{}", e.description()),
+                        _ => { }
+            }
+        }   
     }
 
 
