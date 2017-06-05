@@ -17,6 +17,11 @@ pub struct Editor {
     rustbox: RustBox
 }
 
+struct Cursor {
+    x: usize,
+    y: usize
+}
+
 enum FileStatus {
     Ok,
     NotFound,
@@ -40,7 +45,7 @@ impl Editor
             }
         }
         
-//        println!("Count = {}", count);
+//        println!("Width = {}, Height = {}", editor.rustbox.width(), editor.rustbox.height());
 
         if count == 0 {
             editor.add(Buffer::new_empty_buffer("emp"))
@@ -97,8 +102,12 @@ impl Editor
 
     fn redraw(&mut self)
     {
+        for x in 0..self.rustbox.width() {
+           self.rustbox.print_char(x, 0, RB_NORMAL, Color::Black, Color::Cyan, '-');
+        }
+        self.rustbox.set_cursor(0, 1);
         for (index, part) in self.current_buffer().unwrap().to_string().lines().enumerate() {
-                self.rustbox.print(1, index + 1, RB_NORMAL, Color::White, Color::Black, part);
+                self.rustbox.print(0, index + 1, RB_NORMAL, Color::White, Color::Black, part);
         }
         self.rustbox.present();
 
