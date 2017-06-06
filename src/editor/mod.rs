@@ -17,9 +17,9 @@ pub struct Editor {
     rustbox: RustBox
 }
 
-struct Cursor {
-    x: usize,
-    y: usize
+pub struct Cursor {
+    pub x: usize,
+    pub y: usize
 }
 
 enum FileStatus {
@@ -129,3 +129,12 @@ impl Editor
 
 }
 
+impl Cursor
+{
+    pub fn new() -> Self {
+        Cursor {
+            x: 0,
+            y: 0
+        }
+    }
+}

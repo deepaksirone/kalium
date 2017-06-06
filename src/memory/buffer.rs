@@ -1,6 +1,7 @@
 
 #[cfg(feature = "buffer_gap")] 
 use memory::buffer_gap::{GapBuffer, GapBufferIter};
+use editor::Cursor;
 
 use std::path::PathBuf;
 use std::io::prelude::*;
@@ -18,7 +19,13 @@ pub struct Buffer
 {
     name: String,
 
-    point: usize,
+    current_cursor: usize,
+    cursors: Vec<Cursor>,
+
+    scroll_x: usize,
+    scroll_y: usize,
+
+
     modified: usize,
 //  length: usize,
 
@@ -52,7 +59,11 @@ impl Buffer
     {
         Buffer { 
             name: name.to_owned(),
-            point: 0,
+            current_cursor: 0,
+            cursors: vec![Cursor::new()],
+            scroll_x: 0,
+            scroll_y: 0,
+
             modified: 0,
 //            length: filesize,
             filename: Some(PathBuf::from(fname)),
@@ -69,7 +80,11 @@ impl Buffer
     {
         Buffer {
             name: name.to_owned(),
-            point: 0,
+            current_cursor: 0,
+            cursors: vec![Cursor::new()],
+            scroll_x:0,
+            scroll_y:0,
+
             modified: 0,
             filename: None,
             modename: None,
@@ -122,7 +137,7 @@ impl Buffer
     {
         self.modified
     }
-
+/*
     pub fn set_point_abs(&mut self, point: usize) -> bool 
     {
         if point >= self.get_length() {
@@ -150,7 +165,7 @@ impl Buffer
     {
         self.point
     }
-
+*/
     pub fn get_length(&self) -> usize 
     {
         self.data.as_ref().map(|boxed_buf_ref| boxed_buf_ref.get_length()).unwrap()
