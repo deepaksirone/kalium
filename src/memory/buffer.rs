@@ -105,6 +105,11 @@ impl Buffer
         self.filename.as_ref().map(|fname| fname.clone())
     }
 
+    pub fn get_cursor(&self) -> Option<&Cursor>
+    {
+        Some(&self.cursors[self.current_cursor])
+    }
+
     pub fn write_buffer(&self) -> bool 
     {
         let ops = OpenOptions::new().create(true).write(true).open(self.filename.as_ref().map(|fname| fname.clone()).unwrap());

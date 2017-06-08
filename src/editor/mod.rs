@@ -105,7 +105,9 @@ impl Editor
         for x in 0..self.rustbox.width() {
            self.rustbox.print_char(x, 0, RB_NORMAL, Color::Black, Color::Cyan, '-');
         }
-        self.rustbox.set_cursor(0, 1);
+
+        self.rustbox.set_cursor(1, 1);    
+
         for (index, part) in self.current_buffer().unwrap().to_string().lines().enumerate() {
                 self.rustbox.print(0, index + 1, RB_NORMAL, Color::White, Color::Black, part);
         }
