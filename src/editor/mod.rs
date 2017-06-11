@@ -109,6 +109,7 @@ impl Editor
            self.rustbox.print_char(x, 0, RB_NORMAL, Color::Black, Color::Cyan, '-');
         }
 
+<<<<<<< HEAD
         for y in 0..self.rustbox.height() - 1 {
 //           self.rustbox.print_char(0, y + 1, RB_NORMAL, Color::Black, Color::Blue, from_digit(y as u32, 10).unwrap());
         }
@@ -118,6 +119,9 @@ impl Editor
     {
         self.redraw_status_bar();
         self.rustbox.set_cursor(1, 1);
+=======    
+
+>>>>>>> 5b1299d681a91016534b34ec99f1dc742baa64bd
         for (index, part) in self.current_buffer().unwrap().to_string().lines().enumerate() {
                 self.rustbox.print(1, index + 1, RB_NORMAL, Color::White, Color::Black, part);
         }
@@ -149,5 +153,13 @@ impl Cursor
             x: 0,
             y: 0
         }
+    }
+
+    pub fn get_x(&self) -> usize {
+        self.x
+    }
+
+    pub fn get_y(&self) -> usize {
+        self.y
     }
 }
