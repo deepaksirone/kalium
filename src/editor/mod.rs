@@ -6,6 +6,7 @@ use std::error::Error;
 use std::default::Default;
 use std::fs::*;
 use std::io::prelude::*;
+use std::char::from_digit;
 
 use rustbox::{Color, RustBox};
 use rustbox::*; 
@@ -33,6 +34,8 @@ impl Editor
     pub fn init()
     {
         println!("Starting Kalium...");
+
+        println!("Char = {}", from_digit((2 as usize) as u32, 10).unwrap());
         let mut editor = Editor::new();
         let mut files: Vec<String> = Vec::new();
         let count = env::args().skip(1).count();
@@ -100,14 +103,23 @@ impl Editor
         self.buf_list.get_buf(self.cur_buf_idx)
     }
 
-    fn redraw(&mut self)
+    fn redraw_status_bar(&mut self)
     {
-        for x in 0..self.rustbox.width() {
+        for x in 0..self.rustbox.width() - 1 {
            self.rustbox.print_char(x, 0, RB_NORMAL, Color::Black, Color::Cyan, '-');
         }
-        self.rustbox.set_cursor(0, 1);
+
+        for y in 0..self.rustbox.height() - 1 {
+//           self.rustbox.print_char(0, y + 1, RB_NORMAL, Color::Black, Color::Blue, from_digit(y as u32, 10).unwrap());
+        }
+    }
+
+    fn redraw(&mut self)
+    {
+        self.redraw_status_bar();
+        self.rustbox.set_cursor(1, 1);
         for (index, part) in self.current_buffer().unwrap().to_string().lines().enumerate() {
-                self.rustbox.print(0, index + 1, RB_NORMAL, Color::White, Color::Black, part);
+                self.rustbox.print(1, index + 1, RB_NORMAL, Color::White, Color::Black, part);
         }
         self.rustbox.present();
 
@@ -115,7 +127,8 @@ impl Editor
              match self.rustbox.poll_event(false) {
                  Ok(Event::KeyEvent(key)) => {
                          match key {
-                              Key::Char('q') => { break; }
+                              Key::Right => { self.rustbox.set_cursor(1, 2); self.rustbox.present(); },
+                              Key::Char('q') => { break; },
                               _ => { }
                         }
                 },
