@@ -105,22 +105,25 @@ impl Editor
 
     fn redraw_status_bar(&mut self)
     {
+        let mut z: String;
         for x in 0..self.rustbox.width() - 1 {
            self.rustbox.print_char(x, 0, RB_NORMAL, Color::Black, Color::Cyan, '-');
         }
 
         for y in 0..self.rustbox.height() - 1 {
-//           self.rustbox.print_char(0, y + 1, RB_NORMAL, Color::Black, Color::Blue, from_digit(y as u32, 10).unwrap());
+           z = y.to_string();
+           self.rustbox.print(0, y + 1, RB_NORMAL, Color::Yellow, Color::Black, z.as_str());
         }
+        self.rustbox.present();
     }
 
     fn redraw(&mut self)
     {
         self.redraw_status_bar();
         self.rustbox.set_cursor(1, 1);
-        for (index, part) in self.current_buffer().unwrap().to_string().lines().enumerate() {
-                self.rustbox.print(1, index + 1, RB_NORMAL, Color::White, Color::Black, part);
-        }
+//        for (index, part) in self.current_buffer().unwrap().to_string().lines().enumerate() {
+//                self.rustbox.print(1, index + 1, RB_NORMAL, Color::White, Color::Black, part);
+//        }
         self.rustbox.present();
 
         loop {
