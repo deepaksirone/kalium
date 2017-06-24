@@ -19,8 +19,8 @@ pub struct Editor {
 }
 
 pub struct Cursor {
-    pub x: usize,
-    pub y: usize
+    pub x: isize,
+    pub y: isize
 }
 
 enum FileStatus {
@@ -54,8 +54,23 @@ impl Editor
             editor.add(Buffer::new_empty_buffer("emp"))
         }
         editor.set_cur_buf(0);
+        editor.set_cursor(1, 1);
         editor.redraw();  
-        
+        loop {
+             let x = editor.get_cursor().unwrap().get_x();
+             let y = editor.get_cursor().unwrap().get_y();
+             match editor.rustbox.poll_event(false) {
+                 Ok(Event::KeyEvent(key)) => {
+                         match key {
+                              Key::Right => { editor.set_cursor(x + 1, y); editor.rustbox.present();editor.update_cursor(x + 1, y); },
+                              Key::Char('q') => { break; },
+                              _ => { }
+                         }
+                },
+                Err(e) => panic!("{}", e.description()),
+                        _ => { }
+            }
+        }        
     }
 
 
@@ -102,6 +117,11 @@ impl Editor
     {
         self.buf_list.get_buf(self.cur_buf_idx)
     }
+    
+    fn current_buffer_mut(&mut self) -> Option<&mut Buffer>
+    {
+        self.buf_list.get_buf_mut(self.cur_buf_idx)
+    }
 
     fn redraw_status_bar(&mut self)
     {
@@ -119,30 +139,50 @@ impl Editor
 
     fn redraw(&mut self)
     {
-        self.redraw_status_bar();
-        self.rustbox.set_cursor(1, 1);
-//        for (index, part) in self.current_buffer().unwrap().to_string().lines().enumerate() {
-//                self.rustbox.print(1, index + 1, RB_NORMAL, Color::White, Color::Black, part);
-//        }
+//      self.redraw_status_bar();
+
+        for (index, part) in self.current_buffer().unwrap().to_string().lines().skip(self.scroll_x()).enumerate() {
+                self.rustbox.print(1, index + 1, RB_NORMAL, Color::White, Color::Black, part);
+        }
         self.rustbox.present();
 
-        loop {
-             match self.rustbox.poll_event(false) {
-                 Ok(Event::KeyEvent(key)) => {
-                         match key {
-                              Key::Right => { self.rustbox.set_cursor(1, 2); self.rustbox.present(); },
-                              Key::Char('q') => { break; },
-                              _ => { }
-                        }
-                },
-                Err(e) => panic!("{}", e.description()),
-                        _ => { }
-            }
-        }   
+  
     }
 
+    fn scroll_x(&self) -> usize
+    {
+        self.current_buffer().unwrap().get_scroll_x()
+    }
 
+    fn scroll_y(&self) -> usize
+    {
+        self.current_buffer().unwrap().get_scroll_y()
+    }
+    
+    fn get_width(&self) -> usize
+    {
+        self.rustbox.width()
+    }
 
+    fn get_height(&self) -> usize
+    {
+        self.rustbox.height()
+    }
+
+    fn get_cursor(&self) -> Option<&Cursor>
+    {
+        self.current_buffer().unwrap().get_cursor()
+    }
+
+    fn set_cursor(&mut self, x: isize, y: isize)
+    {
+        self.rustbox.set_cursor(x as isize, y as isize);
+    }
+
+    fn update_cursor(&mut self, x: isize, y: isize)
+    {
+        self.current_buffer_mut().map(|buf| buf.update_cursor(x, y));
+    }
 }
 
 impl Cursor
@@ -154,11 +194,21 @@ impl Cursor
         }
     }
 
-    pub fn get_x(&self) -> usize {
-        self.x
+    pub fn get_x(&self) -> isize {
+        self.x as isize
     }
 
-    pub fn get_y(&self) -> usize {
-        self.y
+    pub fn get_y(&self) -> isize {
+        self.y as isize
     }
+    
+    pub fn set_x(&mut self, x: isize) {
+        self.x = x;
+    }
+
+    pub fn set_y(&mut self, y: isize) {
+        self.y = y;
+    }
+
+
 }

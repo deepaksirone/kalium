@@ -61,7 +61,7 @@ impl Buffer
             name: name.to_owned(),
             current_cursor: 0,
             cursors: vec![Cursor::new()],
-            scroll_x: 0,
+            scroll_x: 0, 
             scroll_y: 0,
 
             modified: 0,
@@ -108,6 +108,18 @@ impl Buffer
     pub fn get_cursor(&self) -> Option<&Cursor>
     {
         Some(&self.cursors[self.current_cursor])
+    }
+
+    pub fn get_cursor_mut(&mut self) -> Option<&mut Cursor>
+    {
+        Some(&mut self.cursors[self.current_cursor])
+    }
+    
+    pub fn update_cursor(&mut self, x: isize, y: isize)
+    {
+        self.get_cursor_mut().map(|cur| { 
+                        cur.set_x(x); cur.set_y(y);
+        });
     }
 
     pub fn write_buffer(&self) -> bool 
@@ -229,6 +241,16 @@ impl Buffer
         }
         s
     }
+
+    pub fn get_scroll_x(&self) -> usize
+    {
+        self.scroll_x
+    }
+
+    pub fn get_scroll_y(&self) -> usize
+    {
+        self.scroll_y
+    }
         
 
 }
@@ -267,7 +289,16 @@ impl BufferList {
             Some(&self.head[idx])
         }
     }
-                 
+    
+    pub fn get_buf_mut(&mut self, idx: usize) -> Option<&mut Buffer> {
+        if idx >= self.head.len() {
+            None
+        }
+        else {
+            Some(&mut self.head[idx])
+        }
+    }
+
 
 }
 
