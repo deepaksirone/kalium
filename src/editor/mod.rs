@@ -55,6 +55,7 @@ impl Editor
         }
         editor.set_cur_buf(0);
         editor.set_cursor(1, 1);
+        editor.update_cursor(1, 1);
         editor.redraw();  
         loop {
              let x = editor.get_cursor().unwrap().get_x();
