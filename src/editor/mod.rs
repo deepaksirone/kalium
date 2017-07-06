@@ -56,7 +56,8 @@ impl Editor
         editor.set_cur_buf(0);
         editor.set_cursor(1, 1);
         editor.update_cursor(1, 1);
-        editor.redraw();  
+        editor.redraw();
+        
         loop {
              let x = editor.get_cursor().unwrap().get_x();
              let y = editor.get_cursor().unwrap().get_y();
@@ -184,6 +185,13 @@ impl Editor
     {
         self.current_buffer_mut().map(|buf| buf.update_cursor(x, y));
     }
+
+    fn event_loop(&mut self)
+    {
+        unimplemented!(); 
+
+    }
+
 }
 
 impl Cursor
