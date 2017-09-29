@@ -171,6 +171,7 @@ impl Editor
         self.rustbox.height()
     }
 
+    #[inline]
     fn get_cursor(&self) -> Option<&Cursor>
     {
         self.current_buffer().unwrap().get_cursor()
@@ -186,9 +187,48 @@ impl Editor
         self.current_buffer_mut().map(|buf| buf.update_cursor(x, y));
     }
 
-    fn event_loop(&mut self)
+    #[inline]
+    fn handle_key_event(&mut self, key: Key)
     {
-        unimplemented!(); 
+        let x;
+        let y;
+        {
+            let cursor = self.get_cursor().unwrap();
+            x = cursor.get_x();
+            y = cursor.get_y(); 
+        }
+        match key {
+            Key::Tab => {
+                    self.set_cursor(x + 4, y); self.rustbox.present(); 
+                    self.update_cursor(x + 4, y);
+            },
+
+            _ => { } 
+        }
+
+    }
+
+    fn handle_resize_event(&mut self, x: i32, y: i32)
+    {
+        unimplemented!();
+    }
+
+    fn handle_mouse_event(&mut self, mouse: Mouse, x: i32, y: i32)
+    {
+        unimplemented!();
+    }
+
+    fn event_loop(&mut self)
+    { 
+        loop {
+             match self.rustbox.poll_event(false)
+             {
+                    Ok(Event::KeyEvent(key)) => self.handle_key_event(key),
+                    Ok(Event::ResizeEvent(x, y)) => self.handle_resize_event(x, y),
+                    Ok(Event::MouseEvent(mouse, x, y)) => self.handle_mouse_event(mouse, x, y),
+                    _ => { }
+             }
+        }
 
     }
 
