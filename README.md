@@ -1,5 +1,5 @@
 # kalium
-A small, hackable text editor written in Rust
+A small, hackable text editor written in Rust. This is a work in progress.
 
 ## Aims
 

@@ -19,4 +19,9 @@ Currently Implemented fuctions (impl GapBuffer)
 
 To be implemented 
 * get_string(point: usize, length: usize) -> String 
-*  
+
+New features
+____________
+1) Config file read at startup else default
+2) Multi Threaded?
+3) Undo/Redo Stack   
