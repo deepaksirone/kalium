@@ -10,11 +10,11 @@ use rustbox::{Color, RustBox};
 use rustbox::Key;
 use memory::buffer::Buffer;
 
-mod memory;
-mod editor;
-mod configs;
-mod ui;
-mod file;
+pub mod memory;
+pub mod editor;
+pub mod configs;
+pub mod ui;
+pub mod file;
 
 fn main()
 {

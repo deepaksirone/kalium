@@ -4,10 +4,9 @@ use memory::buffer::{BufferList, Buffer, BufferIter};
 use std::env;
 use std::error::Error;
 use std::default::Default;
-use std::fs::*;
-use std::io::prelude::*;
 use std::char::from_digit;
 
+use file::FileStatus; 
 use rustbox::{Color, RustBox};
 use rustbox::*; 
 
@@ -18,16 +17,15 @@ pub struct Editor {
     rustbox: RustBox
 }
 
+/* ui 
 pub struct Cursor {
     pub x: isize,
     pub y: isize
 }
 
-enum FileStatus {
-    Ok,
-    NotFound,
-    Other
-}
+File
+
+*/
 
 impl Editor
 {
@@ -51,8 +49,9 @@ impl Editor
 //        println!("Width = {}, Height = {}", editor.rustbox.width(), editor.rustbox.height());
 
         if count == 0 {
-            editor.add(Buffer::new_empty_buffer("emp"))
+            editor.add_buffer(Buffer::new_empty_buffer("emp"));
         }
+/* TODO: Implement/redesign this        
         editor.set_cur_buf(0);
         editor.set_cursor(1, 1);
         editor.update_cursor(1, 1);
@@ -72,7 +71,8 @@ impl Editor
                 Err(e) => panic!("{}", e.description()),
                         _ => { }
             }
-        }        
+        }
+*/ 
     }
 
 
@@ -90,29 +90,17 @@ impl Editor
 
     }
 
-    fn open(&mut self, s: &str) -> FileStatus
-    {
-        if let Some(mut file) = File::open(s).ok() {
-            let mut st = String::new();
-            let _ = file.read_to_string(&mut st);
-            self.buf_list.add(Buffer::new_from_str("bfs", s, st.as_str())); 
-        
-            FileStatus::Ok
-        }
-        else {
-            FileStatus::NotFound
-        }
 
-    }
 
-    fn set_cur_buf(&mut self, idx: usize)
+    pub fn set_cur_buf(&mut self, idx: usize)
     {
         self.cur_buf_idx = idx; 
     }
 
-    fn add(&mut self, buf: Buffer)
+    pub fn add_buffer(&mut self, buf: Buffer) -> usize
     {
         self.buf_list.add(buf);
+        self.buf_list.head.len() - 1
     }
 
     fn current_buffer(&self) -> Option<&Buffer>
@@ -124,7 +112,7 @@ impl Editor
     {
         self.buf_list.get_buf_mut(self.cur_buf_idx)
     }
-
+/* UI 
     fn redraw_status_bar(&mut self)
     {
         let mut z: String;
@@ -231,9 +219,10 @@ impl Editor
         }
 
     }
-
+*/
 }
 
+/* UI 
 impl Cursor
 {
     pub fn new() -> Self {
@@ -261,3 +250,4 @@ impl Cursor
 
 
 }
+*/

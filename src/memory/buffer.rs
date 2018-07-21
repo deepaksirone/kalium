@@ -1,7 +1,7 @@
 
 #[cfg(feature = "buffer_gap")] 
 use memory::buffer_gap::{GapBuffer, GapBufferIter};
-use editor::Cursor;
+use ui::cursor::Cursor;
 
 use std::path::PathBuf;
 use std::io::prelude::*;
@@ -12,7 +12,7 @@ use std::io::*;
 
 pub struct BufferList
 {
-    head: Vec<Buffer>
+    pub head: Vec<Buffer>
 }
 
 pub struct Buffer
